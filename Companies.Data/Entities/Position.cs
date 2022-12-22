@@ -14,6 +14,6 @@ namespace Companies.Data.Entities
 
         [MaxLength(50), Required]
         public string? Name { get; set; }
-        public virtual EmployeePosition? EmployeePosition { get; set; }
+        public virtual ICollection<Employee>? Employees { get; set; }
     }
 }

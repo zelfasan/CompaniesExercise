@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Companies.Data.Migrations
 {
     [DbContext(typeof(CompanyContext))]
-    [Migration("20221221095539_Company")]
+    [Migration("20221221101242_Company")]
     partial class Company
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -190,11 +190,7 @@ namespace Companies.Data.Migrations
 
                     b.HasKey("EmployeeId", "PositionId");
 
-                    b.HasIndex("EmployeeId")
-                        .IsUnique();
-
-                    b.HasIndex("PositionId")
-                        .IsUnique();
+                    b.HasIndex("PositionId");
 
                     b.ToTable("EmployeePositions");
 
@@ -256,6 +252,21 @@ namespace Companies.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("EmployeePosition", b =>
+                {
+                    b.Property<int>("EmployeesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PositionsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("EmployeesId", "PositionsId");
+
+                    b.HasIndex("PositionsId");
+
+                    b.ToTable("EmployeePosition");
+                });
+
             modelBuilder.Entity("Companies.Data.Entities.Department", b =>
                 {
                     b.HasOne("Companies.Data.Entities.Company", "Company")
@@ -281,20 +292,35 @@ namespace Companies.Data.Migrations
             modelBuilder.Entity("Companies.Data.Entities.EmployeePosition", b =>
                 {
                     b.HasOne("Companies.Data.Entities.Employee", "Employee")
-                        .WithOne("EmployeePosition")
-                        .HasForeignKey("Companies.Data.Entities.EmployeePosition", "EmployeeId")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Companies.Data.Entities.Position", "Position")
-                        .WithOne("EmployeePosition")
-                        .HasForeignKey("Companies.Data.Entities.EmployeePosition", "PositionId")
+                        .WithMany()
+                        .HasForeignKey("PositionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Employee");
 
                     b.Navigation("Position");
+                });
+
+            modelBuilder.Entity("EmployeePosition", b =>
+                {
+                    b.HasOne("Companies.Data.Entities.Employee", null)
+                        .WithMany()
+                        .HasForeignKey("EmployeesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Companies.Data.Entities.Position", null)
+                        .WithMany()
+                        .HasForeignKey("PositionsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Companies.Data.Entities.Company", b =>
@@ -305,16 +331,6 @@ namespace Companies.Data.Migrations
             modelBuilder.Entity("Companies.Data.Entities.Department", b =>
                 {
                     b.Navigation("Employees");
-                });
-
-            modelBuilder.Entity("Companies.Data.Entities.Employee", b =>
-                {
-                    b.Navigation("EmployeePosition");
-                });
-
-            modelBuilder.Entity("Companies.Data.Entities.Position", b =>
-                {
-                    b.Navigation("EmployeePosition");
                 });
 #pragma warning restore 612, 618
         }

@@ -21,6 +21,6 @@ namespace Companies.Data.Entities
         public int Salary { get; set; }
         public bool Unionized { get; set; }
         public virtual Department? Department { get; set; }
-        public virtual EmployeePosition? EmployeePosition { get; set; }
+        public virtual ICollection<Position>? Positions { get; set; }
     }
 }

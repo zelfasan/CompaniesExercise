@@ -1,83 +1,48 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Companies.API.Controllers
+namespace Employees.API.Controllers
 {
-    public class EmployeesController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class EmployeesController : ControllerBase
     {
-        // GET: HomeController
-        public ActionResult Index()
+        private readonly IDbService _db;
+        public EmployeesController(IDbService db) => _db = db;
+
+        // GET: api/<ValuesController>
+        [HttpGet]
+        public async Task<IResult> Get()
         {
-            return View();
+            return await _db.HttpGetAsync<Employee, EmployeeDTO>();
         }
 
-        // GET: HomeController/Details/5
-        public ActionResult Details(int id)
+        // GET api/<ValuesController>/5
+        [HttpGet("{id}")]
+        public async Task<IResult> Get(int id)
         {
-            return View();
+            return await _db.HttpSingleAsync<Employee, EmployeeDTO>(id);
         }
 
-        // GET: HomeController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: HomeController/Create
+        // POST api/<ValuesController>
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IResult> Post([FromBody] EmployeeDTO dto)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            return await _db.HttpPostAsync<Employee, EmployeeDTO>(dto);
         }
 
-        // GET: HomeController/Edit/5
-        public ActionResult Edit(int id)
+        // PUT api/<ValuesController>/5
+        [HttpPut("{id}")]
+        public async Task<IResult> Put(int id, [FromBody] EmployeeDTO dto)
         {
-            return View();
+            return await _db.HttpPutAsync<Employee, EmployeeDTO>(id, dto);
         }
 
-        // POST: HomeController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        // DELETE api/<ValuesController>/5
+        [HttpDelete("{id}")]
+        public async Task<IResult> Delete(int id)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: HomeController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: HomeController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            return await _db.HttpDeleteAsync<Employee, EmployeeDTO>(id);
         }
     }
 }

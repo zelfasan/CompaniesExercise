@@ -79,6 +79,30 @@ namespace Companies.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "EmployeePosition",
+                columns: table => new
+                {
+                    EmployeesId = table.Column<int>(type: "int", nullable: false),
+                    PositionsId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EmployeePosition", x => new { x.EmployeesId, x.PositionsId });
+                    table.ForeignKey(
+                        name: "FK_EmployeePosition_Employees_EmployeesId",
+                        column: x => x.EmployeesId,
+                        principalTable: "Employees",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_EmployeePosition_Positions_PositionsId",
+                        column: x => x.PositionsId,
+                        principalTable: "Positions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "EmployeePositions",
                 columns: table => new
                 {
@@ -88,7 +112,18 @@ namespace Companies.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_EmployeePositions", x => new { x.EmployeeId, x.PositionId });
-                    
+                    table.ForeignKey(
+                        name: "FK_EmployeePositions_Employees_EmployeeId",
+                        column: x => x.EmployeeId,
+                        principalTable: "Employees",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_EmployeePositions_Positions_PositionId",
+                        column: x => x.PositionId,
+                        principalTable: "Positions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
@@ -149,16 +184,14 @@ namespace Companies.Data.Migrations
                 column: "CompanyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_EmployeePositions_EmployeeId",
-                table: "EmployeePositions",
-                column: "EmployeeId",
-                unique: true);
+                name: "IX_EmployeePosition_PositionsId",
+                table: "EmployeePosition",
+                column: "PositionsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_EmployeePositions_PositionId",
                 table: "EmployeePositions",
-                column: "PositionId",
-                unique: true);
+                column: "PositionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Employees_DepartmentId",
@@ -168,6 +201,9 @@ namespace Companies.Data.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "EmployeePosition");
+
             migrationBuilder.DropTable(
                 name: "EmployeePositions");
 

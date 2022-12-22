@@ -57,7 +57,6 @@ namespace Companies.Data.Contexts
             var positions = new List<Position>
             {
                 new Position { Id = 1, Name = "pos1"},
-
                 new Position { Id = 2, Name = "pos2"},
                 new Position { Id = 3, Name = "pos3"}
             };
